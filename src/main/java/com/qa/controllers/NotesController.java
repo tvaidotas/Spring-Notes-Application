@@ -3,10 +3,7 @@ package com.qa.controllers;
 import com.qa.models.Note;
 import com.qa.repository.NotesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +20,20 @@ public class NotesController {
     }
 
     @RequestMapping(value = "notes", method = RequestMethod.POST)
+    public Note addNote(@RequestBody Note note){
+        return repository.saveAndFlush(note);
+    }
 
+    @RequestMapping(value = "notes/{id}", method = RequestMethod.GET)
+    public Note getNote(@PathVariable Long id){
+        return repository.findOne(id);
+    }
+
+    @RequestMapping(value = "notes/{id}", method = RequestMethod.DELETE)
+    public Note deleteNote(@PathVariable Long id){
+        Note existing = repository.findOne(id);
+        repository.delete(existing);
+        return existing;
+    }
 
 }
