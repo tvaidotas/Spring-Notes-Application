@@ -29,6 +29,13 @@ public class NotesController {
         return repository.findOne(id);
     }
 
+    @RequestMapping(value = "notes/{id}", method = RequestMethod.PUT)
+    public Note updateNote(@PathVariable Long id, @RequestBody Note note){
+        Note update = getNote(id);
+        update.setStatus(note.getStatus());
+        return repository.save(update);
+    }
+
     @RequestMapping(value = "notes/{id}", method = RequestMethod.DELETE)
     public Note deleteNote(@PathVariable Long id){
         Note existing = repository.findOne(id);
