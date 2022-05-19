@@ -11,8 +11,11 @@ import java.util.List;
 @CrossOrigin()
 public class NotesController {
 
-    @Autowired
-    private NotesRepository repository;
+    private final NotesRepository repository;
+
+    public NotesController(NotesRepository repository) {
+        this.repository = repository;
+    }
 
     @GetMapping("notes")
     public List<Note> listAllNotes() {
