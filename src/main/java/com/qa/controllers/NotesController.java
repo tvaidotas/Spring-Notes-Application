@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin()
@@ -44,6 +46,15 @@ public class NotesController {
         Note existing = repository.findById(id).orElseThrow(() -> new Exception("Could not delete Note"));
         repository.delete(existing);
         return existing;
+    }
+
+    @GetMapping("notes/search/{key}")
+    public List<Note> searchForNotes(@PathVariable String key){
+       return repository
+               .findAll()
+               .stream()
+               .filter(note -> note.getDescription().toLowerCase().contains(key.toLowerCase()))
+               .collect(Collectors.toList());
     }
 
 }
