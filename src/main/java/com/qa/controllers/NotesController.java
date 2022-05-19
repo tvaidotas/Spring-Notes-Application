@@ -15,30 +15,30 @@ public class NotesController {
     private NotesRepository repository;
 
     @RequestMapping(value = "notes", method = RequestMethod.GET)
-    public List<Note> listAllNotes(){
+    public List<Note> listAllNotes() {
         return repository.findAll();
     }
 
     @RequestMapping(value = "notes", method = RequestMethod.POST)
-    public Note addNote(@RequestBody Note note){
+    public Note addNote(@RequestBody Note note) {
         return repository.saveAndFlush(note);
     }
 
     @RequestMapping(value = "notes/{id}", method = RequestMethod.GET)
-    public Note getNote(@PathVariable Long id){
-        return repository.findOne(id);
+    public Note getNote(@PathVariable Long id) throws Exception {
+        return repository.findById(id).orElseThrow(() -> new Exception("Could not find Note"));
     }
 
     @RequestMapping(value = "notes/{id}", method = RequestMethod.PUT)
-    public Note updateNote(@PathVariable Long id, @RequestBody Note note){
+    public Note updateNote(@PathVariable Long id, @RequestBody Note note) throws Exception {
         Note update = getNote(id);
         update.setStatus(note.getStatus());
         return repository.save(update);
     }
 
     @RequestMapping(value = "notes/{id}", method = RequestMethod.DELETE)
-    public Note deleteNote(@PathVariable Long id){
-        Note existing = repository.findOne(id);
+    public Note deleteNote(@PathVariable Long id) throws Exception {
+        Note existing = repository.findById(id).orElseThrow(() -> new Exception("Could not delete Note"));
         repository.delete(existing);
         return existing;
     }
