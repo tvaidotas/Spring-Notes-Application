@@ -51,7 +51,7 @@ public class NotesController {
     }
 
     @GetMapping("notes/searchByKey/{key}")
-    public List<Note> searchForNotesByKey(@PathVariable String key) throws Exception {
+    public List<Note> searchForNotesByKey(@PathVariable String key) {
         List<Note> notesFound = repository
                 .findAll()
                 .stream()
