@@ -14,29 +14,29 @@ public class NotesController {
     @Autowired
     private NotesRepository repository;
 
-    @RequestMapping(value = "notes", method = RequestMethod.GET)
+    @GetMapping("notes")
     public List<Note> listAllNotes() {
         return repository.findAll();
     }
 
-    @RequestMapping(value = "notes", method = RequestMethod.POST)
+    @PostMapping("notes")
     public Note addNote(@RequestBody Note note) {
         return repository.saveAndFlush(note);
     }
 
-    @RequestMapping(value = "notes/{id}", method = RequestMethod.GET)
+    @GetMapping("notes/{id}")
     public Note getNote(@PathVariable Long id) throws Exception {
         return repository.findById(id).orElseThrow(() -> new Exception("Could not find Note"));
     }
 
-    @RequestMapping(value = "notes/{id}", method = RequestMethod.PUT)
+    @PutMapping("notes/{id}")
     public Note updateNote(@PathVariable Long id, @RequestBody Note note) throws Exception {
         Note update = getNote(id);
         update.setStatus(note.getStatus());
         return repository.save(update);
     }
 
-    @RequestMapping(value = "notes/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("notes/{id}")
     public Note deleteNote(@PathVariable Long id) throws Exception {
         Note existing = repository.findById(id).orElseThrow(() -> new Exception("Could not delete Note"));
         repository.delete(existing);
