@@ -5,8 +5,10 @@ import com.qa.repository.NotesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -48,13 +50,32 @@ public class NotesController {
         return existing;
     }
 
-    @GetMapping("notes/search/{key}")
-    public List<Note> searchForNotes(@PathVariable String key){
-       return repository
-               .findAll()
-               .stream()
-               .filter(note -> note.getDescription().toLowerCase().contains(key.toLowerCase()))
-               .collect(Collectors.toList());
+    @GetMapping("notes/searchByKey/{key}")
+    public List<Note> searchForNotesByKey(@PathVariable String key) throws Exception {
+        List<Note> notesFound = repository
+                .findAll()
+                .stream()
+                .filter(note -> note.getDescription().toLowerCase().contains(key.toLowerCase()))
+                .collect(Collectors.toList());
+        if (notesFound.isEmpty()){
+            return Collections.emptyList();
+        } else {
+            return notesFound;
+        }
+    }
+
+    @GetMapping("notes/searchByStatus/{status}")
+    public List<Note> searchForNotesByStatus(@PathVariable String status){
+        List<Note> notesFound = repository
+                .findAll()
+                .stream()
+                .filter(note -> Objects.equals(note.getStatus(), status))
+                .collect(Collectors.toList());
+        if (notesFound.isEmpty()){
+            return Collections.emptyList();
+        } else {
+            return notesFound;
+        }
     }
 
 }
