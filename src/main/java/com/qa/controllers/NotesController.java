@@ -2,12 +2,10 @@ package com.qa.controllers;
 
 import com.qa.models.Note;
 import com.qa.repository.NotesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -57,7 +55,7 @@ public class NotesController {
                 .stream()
                 .filter(note -> note.getDescription().toLowerCase().contains(key.toLowerCase()))
                 .collect(Collectors.toList());
-        if (notesFound.isEmpty()){
+        if (notesFound.isEmpty()) {
             return Collections.emptyList();
         } else {
             return notesFound;
@@ -65,13 +63,13 @@ public class NotesController {
     }
 
     @GetMapping("notes/searchByStatus/{status}")
-    public List<Note> searchForNotesByStatus(@PathVariable String status){
+    public List<Note> searchForNotesByStatus(@PathVariable String status) {
         List<Note> notesFound = repository
                 .findAll()
                 .stream()
                 .filter(note -> Objects.equals(note.getStatus(), status))
                 .collect(Collectors.toList());
-        if (notesFound.isEmpty()){
+        if (notesFound.isEmpty()) {
             return Collections.emptyList();
         } else {
             return notesFound;
