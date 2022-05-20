@@ -215,6 +215,13 @@
         todoItemNode.appendChild(descriptionTextNode);
 
         document.getElementById("todoList").appendChild(todoItemNode);
+
+        let tickBoxNode = document.createElement("SPAN");
+        let tickBoxText = document.createTextNode("🗸");
+        tickBoxNode.appendChild(tickBoxText);
+        todoItemNode.prepend(tickBoxNode);
+        tickBoxNode.className = "tickVisible";
+
         let tickSpanNode = document.createElement("SPAN");
         let tickText = document.createTextNode("\u2713");  // \u2713 is unicode for the tick symbol
         tickSpanNode.appendChild(tickText);
@@ -238,20 +245,36 @@
         todoItemNode.onclick = function () {
             if (item["status"] === "NEW") {
                 item["status"] = "DONE"
+                todoItemNode.classList.toggle("checked");
+                tickBoxNode.classList.toggle("tickHidden");
+                tickSpanNode.classList.toggle("tickVisible");
+
             } else {
                 item["status"] = "NEW"
+                todoItemNode.classList.toggle("unchecked");
+                tickBoxNode.classList.toggle("tickVisible");
             }
 
             updateTodoItem(item["id"], item);
+            //
+            // todoItemNode.classList.toggle("checked");
+            // tickSpanNode.classList.toggle("tickVisible");
+            // tickBoxNode.classList.toggle("tickHidden");
 
-            todoItemNode.classList.toggle("checked");
-            tickSpanNode.classList.toggle("tickVisible");
+        }
+
+        if (item["status"] === "NEW") {
+            tickBoxNode.classList.toggle("tickVisible");
+            tickSpanNode.classList.toggle("tickHidden");
         }
 
         if (item["status"] !== "NEW") {
             todoItemNode.classList.toggle("checked");
             tickSpanNode.classList.toggle("tickVisible");
+            tickBoxNode.classList.toggle("tickHidden");
         }
+
+
     }
 
     /****************************************************************************
