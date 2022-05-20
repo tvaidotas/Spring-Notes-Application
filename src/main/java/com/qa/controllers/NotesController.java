@@ -4,6 +4,7 @@ import com.qa.models.Note;
 import com.qa.repository.NotesRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -68,6 +69,20 @@ public class NotesController {
                 .findAll()
                 .stream()
                 .filter(note -> Objects.equals(note.getStatus(), status))
+                .collect(Collectors.toList());
+        if (notesFound.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return notesFound;
+        }
+    }
+
+    @GetMapping("notes/searchByToday")
+    public List<Note> searchForNotesByStatus() {
+        List<Note> notesFound = repository
+                .findAll()
+                .stream()
+                .filter(note -> note.getCreationDate().equals(LocalDate.now()))
                 .collect(Collectors.toList());
         if (notesFound.isEmpty()) {
             return Collections.emptyList();
