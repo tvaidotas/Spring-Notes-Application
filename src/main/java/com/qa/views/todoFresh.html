@@ -95,8 +95,17 @@
         float: right;
     }
 
+    .listItemHidden{
+        visibility: hidden;
+    }
+
+    .listItemVisible{
+        visibility: visible;
+    }
+
 </style>
 <script>
+
     function addNewTodoItem() {
         let todoValue = document.getElementById("newTodoDescription").value.trim();
         if (todoValue === "") {
@@ -138,10 +147,9 @@
     }
 
     function addTodoItemToDisplay(item, index) {
-
-
         let todoItemNode = document.createElement("li");
         let descriptionTextNode = document.createTextNode(item["description"]);
+        todoItemNode.id = "tickListItem:" + index;
         todoItemNode.appendChild(descriptionTextNode);
         document.getElementById("todoList").appendChild(todoItemNode);
 
@@ -207,6 +215,35 @@
             })
     }
 
+    function searchTodos(){
+        let todoValue = document.getElementById("newTodoSearch").value.trim();
+        if(todoValue === ""){
+            location.reload();
+        }
+
+        document.getElementById("todoList").remove();
+        let unorderedList = document.createElement("ul");
+        unorderedList.className = "";
+        unorderedList.style.paddingTop = "25px";
+        unorderedList.style.paddingLeft = "0px";
+        unorderedList.id = "todoList";
+        document.body.append(unorderedList);
+
+        const requestOptions = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        };
+        fetch('http://localhost:9000/notes/searchByKey/' + todoValue, requestOptions)
+            .then((response) => {
+                if (!response.ok) {
+                    location.reload();
+                    // alert("Please enter a valid value")
+                    // throw response.status;
+                } else return response.json();
+            })
+            .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
+    }
+
 </script>
 <body onload="readTodoItems()">
 
@@ -216,8 +253,9 @@
     <input id="newTodoDescription" placeholder="Title..." type="text" style="width: 97%;">
 </form>
 
-<form action="javascript:searchTodos()" id="searchItemForm">
-    <input class="button" id="newTodoSearch" type="search" placeholder="Search" style="width: 100%; float: right"/>
+<!--<form action="javascript:searchTodos()" id="searchItemForm">-->
+<form action="" id="searchItemForm">
+    <input class="button" id="newTodoSearch" onkeyup="searchTodos()" type="search" placeholder="Search" style="width: 100%; float: right"/>
 </form>
 
 <ul class="list" id="todoList" style="padding-top: 25px; padding-left: 0px">

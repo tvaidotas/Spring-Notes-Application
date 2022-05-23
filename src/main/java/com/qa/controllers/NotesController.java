@@ -39,6 +39,7 @@ public class NotesController {
     public Note updateNote(@PathVariable Long id, @RequestBody Note note) throws Exception {
         Note update = getNote(id);
         update.setStatus(note.getStatus());
+        update.setDescription(note.getDescription());
         return repository.save(update);
     }
 
