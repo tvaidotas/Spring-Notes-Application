@@ -6,18 +6,18 @@
 </head>
 <style>
 
-    body{
-        width:100%;
-        height:100%;
-        margin:0;
-        padding:0;
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
     }
 
-    html{
-        width:100%;
-        height:100%;
-        margin:0;
-        padding:0;
+    html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
     }
 
     #addItemForm {
@@ -141,21 +141,23 @@
                     throw response.status;
                 } else return response.json();
             })
-            .then(items => items.map(item => addTodoItemToDisplay(item)));
+            .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
     }
 
-    function addTodoItemToDisplay(item) {
+    function addTodoItemToDisplay(item, index) {
+
 
         let todoItemNode = document.createElement("li");
         let descriptionTextNode = document.createTextNode(item["description"]);
         todoItemNode.appendChild(descriptionTextNode);
-
         document.getElementById("todoList").appendChild(todoItemNode);
 
         let tickSpanNode = document.createElement("SPAN");
-        let tickText = document.createTextNode("\u2713");  // \u2713 is unicode for the tick symbol
-        tickSpanNode.classList.toggle("tickHidden");
+        // let tickText = document.createTextNode("\u2713");  // \u2713 is unicode for the tick symbol
+        let tickText = document.createTextNode("🗸");  // \u2713 is unicode for the tick symbol
+        tickSpanNode.classList.toggle("tickVisible");
         tickSpanNode.appendChild(tickText);
+        tickSpanNode.id = "tick" + index;
         todoItemNode.appendChild(tickSpanNode);
 
         let closeSpanNode = document.createElement("SPAN");
@@ -176,13 +178,12 @@
             if (item["status"] === "NEW") {
                 item["status"] = "DONE"
                 todoItemNode.classList.toggle("checked");
-                tickSpanNode.classList.toggle("tickVisible");
+                document.getElementById("tick" + index).textContent = "\u2713";
             } else {
                 item["status"] = "NEW"
                 todoItemNode.classList.toggle("unchecked");
+                document.getElementById("tick" + index).textContent = "🗸";
             }
-            todoItemNode.classList.toggle("checked");
-            tickSpanNode.classList.toggle("tickVisible");
             updateTodoItem(item["id"], item);
         }
 
@@ -216,19 +217,18 @@
 </script>
 <body onload="readTodoItems()">
 
-    <h1 style="text-align: center">Todo application</h1>
+<h1 style="text-align: center">Todo application</h1>
 
-    <form action="javascript:addNewTodoItem()" id="addItemForm">
-        <input id="newTodoDescription" placeholder="Title..." type="text" style="width: 97%;">
-<!--        <input class="button" type="submit" value="Add Task" style="float: right"/>-->
-    </form>
+<form action="javascript:addNewTodoItem()" id="addItemForm">
+    <input id="newTodoDescription" placeholder="Title..." type="text" style="width: 97%;">
+</form>
 
-    <form action="javascript:searchTodos()" id="searchItemForm">
-        <input class="button" id="newTodoSearch" type="search" placeholder="Search" style="width: 100%; float: right"/>
-    </form>
+<form action="javascript:searchTodos()" id="searchItemForm">
+    <input class="button" id="newTodoSearch" type="search" placeholder="Search" style="width: 100%; float: right"/>
+</form>
 
-    <ul class="list" id="todoList" style="padding-top: 25px; padding-left: 0px">
-    </ul>
+<ul class="list" id="todoList" style="padding-top: 25px; padding-left: 0px">
+</ul>
 
 </body>
 </html>
