@@ -101,13 +101,47 @@
         float: right;
     }
 
-    .listItemHidden{
+    .listItemHidden {
         visibility: hidden;
     }
 
-    .listItemVisible{
+    .listItemVisible {
         visibility: visible;
     }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        float: right;
+        text-align: center;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {background-color: #ddd;}
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {background-color: #3e8e41;}
 
 </style>
 <script>
@@ -221,9 +255,9 @@
             })
     }
 
-    function searchTodos(){
+    function searchTodos() {
         let todoValue = document.getElementById("newTodoSearch").value.trim();
-        if(todoValue === ""){
+        if (todoValue === "") {
             location.reload();
         }
 
@@ -261,7 +295,16 @@
 
 <!--<form action="javascript:searchTodos()" id="searchItemForm">-->
 <form action="" id="searchItemForm">
-    <input class="button" id="newTodoSearch" onkeyup="searchTodos()" type="search" placeholder="Search" style="width: 100%; float: right"/>
+    <input class="button" id="newTodoSearch" onkeyup="searchTodos()" type="search" placeholder="Search"
+           style="width: 50%; float: left"/>
+    <div class="dropdown">
+        <a class="dropbtn">Show advanced filters▼</a>
+        <div class="dropdown-content">
+            <a href="#">Completed</a>
+            <a href="#">Todo</a>
+            <a href="#">Today</a>
+        </div>
+    </div>
 </form>
 
 <ul class="list" id="todoList" style="padding-top: 25px; padding-left: 0px">
