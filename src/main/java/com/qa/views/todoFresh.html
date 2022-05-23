@@ -71,6 +71,12 @@
         background: #ddd;
     }
 
+    ul li.checked {
+        background: #888;
+        color: #fff;
+        text-decoration: line-through;
+    }
+
     /* CSS style to hide the "tick" symbol if an item status is not set to "DONE"
    This is done in code - see the addTodoItemToDisplay() function where the element is classList.toggle() */
     .tickHidden {
@@ -182,7 +188,7 @@
                 tickElement.textContent = "\u2713";
             } else {
                 item["status"] = "NEW"
-                todoItemNode.classList.toggle("unchecked");
+                todoItemNode.classList.toggle("checked");
                 tickElement.textContent = "🗸";
             }
             updateTodoItem(item["id"], item);
