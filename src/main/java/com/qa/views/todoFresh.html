@@ -71,13 +71,6 @@
         background: #ddd;
     }
 
-    /* When clicked on, change the background colour and strike out text */
-    ul li.checked {
-        background: #888;
-        color: #fff;
-        text-decoration: line-through;
-    }
-
     /* CSS style to hide the "tick" symbol if an item status is not set to "DONE"
    This is done in code - see the addTodoItemToDisplay() function where the element is classList.toggle() */
     .tickHidden {
@@ -153,7 +146,6 @@
         document.getElementById("todoList").appendChild(todoItemNode);
 
         let tickSpanNode = document.createElement("SPAN");
-        // let tickText = document.createTextNode("\u2713");  // \u2713 is unicode for the tick symbol
         let tickText = document.createTextNode("🗸");  // \u2713 is unicode for the tick symbol
         tickSpanNode.classList.toggle("tickVisible");
         tickSpanNode.appendChild(tickText);
@@ -175,14 +167,15 @@
         }
 
         todoItemNode.onclick = function () {
+            let tickElement = document.getElementById("tick" + index);
             if (item["status"] === "NEW") {
                 item["status"] = "DONE"
                 todoItemNode.classList.toggle("checked");
-                document.getElementById("tick" + index).textContent = "\u2713";
+                tickElement.textContent = "\u2713";
             } else {
                 item["status"] = "NEW"
                 todoItemNode.classList.toggle("unchecked");
-                document.getElementById("tick" + index).textContent = "🗸";
+                tickElement.textContent = "🗸";
             }
             updateTodoItem(item["id"], item);
         }
