@@ -8,15 +8,14 @@
 </head>
 <body onload="readTodoItems()">
 
-<h1 style="text-align: center">Todo application</h1>
+<h1>Todo application</h1>
 
 <form action="javascript:addNewTodoItem()" id="addItemForm">
-    <input id="newTodoDescription" placeholder="Title..." type="text" style="width: 97%;">
+    <input id="newTodoDescription" placeholder="Title..." type="text">
 </form>
 
 <form action="" id="searchItemForm">
-    <input class="button" id="newTodoSearch" onkeyup="searchTodos()" type="search" placeholder="Search"
-           style="width: 50%; float: left"/>
+    <input id="newTodoSearch" onkeyup="searchTodos()" type="search" placeholder="Search"/>
     <div class="dropdown">
         <a class="dropbtn">Show advanced filters▼</a>
         <div class="dropdown-content">
