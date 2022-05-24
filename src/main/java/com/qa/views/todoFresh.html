@@ -180,6 +180,13 @@
     }
 
     function readTodoItems() {
+        document.getElementById("todoList").remove();
+        let unorderedList = document.createElement("ul");
+        unorderedList.className = "";
+        unorderedList.style.paddingTop = "25px";
+        unorderedList.style.paddingLeft = "0px";
+        unorderedList.id = "todoList";
+        document.body.append(unorderedList);
         fetch('http://localhost:9000/notes')
             .then((response) => {
                 if (!response.ok) {
@@ -230,6 +237,12 @@
                 tickElement.textContent = "🗸";
             }
             updateTodoItem(item["id"], item);
+        }
+
+        if (item.status === "DONE"){
+            let tickElement = document.getElementById("tick" + index);
+            todoItemNode.classList.toggle("checked");
+            tickElement.textContent = "\u2713";
         }
 
     }
@@ -313,8 +326,27 @@
         let element = document.getElementById("completedDropdown");
         if (element.textContent === "🗸"){
             element.textContent = "\u2713";
+            document.getElementById("todoList").remove();
+            let unorderedList = document.createElement("ul");
+            unorderedList.className = "";
+            unorderedList.style.paddingTop = "25px";
+            unorderedList.style.paddingLeft = "0px";
+            unorderedList.id = "todoList";
+            document.body.append(unorderedList);
+            const requestOptions = {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            };
+            fetch('http://localhost:9000/notes/searchByStatus/DONE', requestOptions)
+                .then((response) => {
+                    if (!response.ok) {
+                        location.reload();
+                    } else return response.json();
+                })
+                .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
         } else {
             element.textContent = "🗸";
+            readTodoItems();
         }
     }
 
@@ -322,8 +354,27 @@
         let element = document.getElementById("todoDropdown");
         if (element.textContent === "🗸"){
             element.textContent = "\u2713";
+            document.getElementById("todoList").remove();
+            let unorderedList = document.createElement("ul");
+            unorderedList.className = "";
+            unorderedList.style.paddingTop = "25px";
+            unorderedList.style.paddingLeft = "0px";
+            unorderedList.id = "todoList";
+            document.body.append(unorderedList);
+            const requestOptions = {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            };
+            fetch('http://localhost:9000/notes/searchByStatus/NEW', requestOptions)
+                .then((response) => {
+                    if (!response.ok) {
+                        location.reload();
+                    } else return response.json();
+                })
+                .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
         } else {
             element.textContent = "🗸";
+            readTodoItems();
         }
     }
 
