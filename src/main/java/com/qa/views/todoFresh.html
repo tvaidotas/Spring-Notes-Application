@@ -180,13 +180,7 @@
     }
 
     function readTodoItems() {
-        document.getElementById("todoList").remove();
-        let unorderedList = document.createElement("ul");
-        unorderedList.className = "";
-        unorderedList.style.paddingTop = "25px";
-        unorderedList.style.paddingLeft = "0px";
-        unorderedList.id = "todoList";
-        document.body.append(unorderedList);
+        clearTodos();
         fetch('http://localhost:9000/notes')
             .then((response) => {
                 if (!response.ok) {
@@ -225,8 +219,8 @@
             }
         }
 
+        let tickElement = document.getElementById("tick" + index);
         todoItemNode.onclick = function () {
-            let tickElement = document.getElementById("tick" + index);
             if (item["status"] === "NEW") {
                 item["status"] = "DONE"
                 todoItemNode.classList.toggle("checked");
@@ -240,7 +234,6 @@
         }
 
         if (item.status === "DONE"){
-            let tickElement = document.getElementById("tick" + index);
             todoItemNode.classList.toggle("checked");
             tickElement.textContent = "\u2713";
         }
@@ -278,13 +271,7 @@
             location.reload();
         }
 
-        document.getElementById("todoList").remove();
-        let unorderedList = document.createElement("ul");
-        unorderedList.className = "";
-        unorderedList.style.paddingTop = "25px";
-        unorderedList.style.paddingLeft = "0px";
-        unorderedList.id = "todoList";
-        document.body.append(unorderedList);
+        clearTodos();
 
         const requestOptions = {
             method: 'GET',
@@ -302,13 +289,7 @@
     }
 
     function searchTodayTodos() {
-        document.getElementById("todoList").remove();
-        let unorderedList = document.createElement("ul");
-        unorderedList.className = "";
-        unorderedList.style.paddingTop = "25px";
-        unorderedList.style.paddingLeft = "0px";
-        unorderedList.id = "todoList";
-        document.body.append(unorderedList);
+        clearTodos();
         const requestOptions = {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
@@ -326,13 +307,7 @@
         let element = document.getElementById("completedDropdown");
         if (element.textContent === "🗸"){
             element.textContent = "\u2713";
-            document.getElementById("todoList").remove();
-            let unorderedList = document.createElement("ul");
-            unorderedList.className = "";
-            unorderedList.style.paddingTop = "25px";
-            unorderedList.style.paddingLeft = "0px";
-            unorderedList.id = "todoList";
-            document.body.append(unorderedList);
+            clearTodos();
             const requestOptions = {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json'}
@@ -354,13 +329,7 @@
         let element = document.getElementById("todoDropdown");
         if (element.textContent === "🗸"){
             element.textContent = "\u2713";
-            document.getElementById("todoList").remove();
-            let unorderedList = document.createElement("ul");
-            unorderedList.className = "";
-            unorderedList.style.paddingTop = "25px";
-            unorderedList.style.paddingLeft = "0px";
-            unorderedList.id = "todoList";
-            document.body.append(unorderedList);
+            clearTodos();
             const requestOptions = {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json'}
@@ -387,6 +356,16 @@
             element.textContent = "🗸";
             readTodoItems();
         }
+    }
+
+    function clearTodos(){
+        document.getElementById("todoList").remove();
+        let unorderedList = document.createElement("ul");
+        unorderedList.className = "";
+        unorderedList.style.paddingTop = "25px";
+        unorderedList.style.paddingLeft = "0px";
+        unorderedList.id = "todoList";
+        document.body.append(unorderedList);
     }
 
 </script>
