@@ -89,21 +89,22 @@ function removeTodoItem(closeSpanNode, todoItemNode, item){
 }
 
 function flipStatusIcon(item, itemNode, index){
+    let CHECKED = "checked";
     let tickElement = document.getElementById("tick" + index);
     itemNode.onclick = function () {
-        if (item["status"] === NEW) {
-            item["status"] = DONE
-            itemNode.classList.toggle("checked");
+        if (item[STATUS] === NEW) {
+            item[STATUS] = DONE
+            itemNode.classList.toggle(CHECKED);
             tickElement.textContent = TICKEDBOX;
         } else {
-            item["status"] = NEW
-            itemNode.classList.toggle("checked");
+            item[STATUS] = NEW
+            itemNode.classList.toggle(CHECKED);
             tickElement.textContent = EMPTYBOX;
         }
         updateTodoItem(item["id"], item);
     }
     if (item.status === DONE) {
-        itemNode.classList.toggle("checked");
+        itemNode.classList.toggle(CHECKED);
         tickElement.textContent = TICKEDBOX;
     }
 }
