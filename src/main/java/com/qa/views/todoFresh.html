@@ -288,6 +288,27 @@
             .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
     }
 
+    function searchTodayTodos() {
+        document.getElementById("todoList").remove();
+        let unorderedList = document.createElement("ul");
+        unorderedList.className = "";
+        unorderedList.style.paddingTop = "25px";
+        unorderedList.style.paddingLeft = "0px";
+        unorderedList.id = "todoList";
+        document.body.append(unorderedList);
+        const requestOptions = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        };
+        fetch('http://localhost:9000/notes/searchByToday', requestOptions)
+            .then((response) => {
+                if (!response.ok) {
+                    location.reload();
+                } else return response.json();
+            })
+            .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
+    }
+
     function sortCompletedItems(){
         let element = document.getElementById("completedDropdown");
         if (element.textContent === "🗸"){
@@ -310,8 +331,10 @@
         let element = document.getElementById("todayDropdown");
         if (element.textContent === "🗸"){
             element.textContent = "\u2713";
+            searchTodayTodos();
         } else {
             element.textContent = "🗸";
+            readTodoItems();
         }
     }
 
