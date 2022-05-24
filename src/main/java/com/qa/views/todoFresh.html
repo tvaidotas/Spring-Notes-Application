@@ -270,9 +270,7 @@
         if (todoValue === "") {
             location.reload();
         }
-
         clearTodos();
-
         const requestOptions = {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
@@ -281,8 +279,6 @@
             .then((response) => {
                 if (!response.ok) {
                     location.reload();
-                    // alert("Please enter a valid value")
-                    // throw response.status;
                 } else return response.json();
             })
             .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
@@ -308,17 +304,7 @@
         if (element.textContent === "🗸"){
             element.textContent = "\u2713";
             clearTodos();
-            const requestOptions = {
-                method: 'GET',
-                headers: {'Content-Type': 'application/json'}
-            };
-            fetch('http://localhost:9000/notes/searchByStatus/DONE', requestOptions)
-                .then((response) => {
-                    if (!response.ok) {
-                        location.reload();
-                    } else return response.json();
-                })
-                .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
+            getTodosByStatus("DONE");
         } else {
             element.textContent = "🗸";
             readTodoItems();
@@ -330,17 +316,7 @@
         if (element.textContent === "🗸"){
             element.textContent = "\u2713";
             clearTodos();
-            const requestOptions = {
-                method: 'GET',
-                headers: {'Content-Type': 'application/json'}
-            };
-            fetch('http://localhost:9000/notes/searchByStatus/NEW', requestOptions)
-                .then((response) => {
-                    if (!response.ok) {
-                        location.reload();
-                    } else return response.json();
-                })
-                .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
+            getTodosByStatus("NEW");
         } else {
             element.textContent = "🗸";
             readTodoItems();
@@ -366,6 +342,20 @@
         unorderedList.style.paddingLeft = "0px";
         unorderedList.id = "todoList";
         document.body.append(unorderedList);
+    }
+
+    function getTodosByStatus(status){
+        const requestOptions = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        };
+        fetch('http://localhost:9000/notes/searchByStatus/' + status, requestOptions)
+            .then((response) => {
+                if (!response.ok) {
+                    location.reload();
+                } else return response.json();
+            })
+            .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
     }
 
 </script>
