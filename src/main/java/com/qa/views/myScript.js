@@ -43,24 +43,38 @@ function readTodoItems() {
 
 function addTodoItemToDisplay(item, index) {
     let todoItemNode = document.createElement("li");
+    createListItems(todoItemNode, item, index);
+    addTickboxOption(todoItemNode, index);
+    addRemoveOption(todoItemNode, item);
+    flipStatusIcon(item, todoItemNode, index);
+}
+
+function createListItems(todoItemNode, item, index){
     let descriptionTextNode = document.createTextNode(item["description"]);
     todoItemNode.id = "tickListItem:" + index;
     todoItemNode.appendChild(descriptionTextNode);
     document.getElementById("todoList").appendChild(todoItemNode);
+}
 
+function addTickboxOption(todoItemNode, index){
     let tickSpanNode = document.createElement("SPAN");
-    let tickText = document.createTextNode("🗸");  // \u2713 is unicode for the tick symbol
+    let tickText = document.createTextNode("🗸");
     tickSpanNode.classList.toggle("tickVisible");
     tickSpanNode.appendChild(tickText);
     tickSpanNode.id = "tick" + index;
     todoItemNode.appendChild(tickSpanNode);
+}
 
+function addRemoveOption(todoItemNode, item){
     let closeSpanNode = document.createElement("SPAN");
     let closeText = document.createTextNode("X");
     closeSpanNode.className = "close";
     closeSpanNode.appendChild(closeText);
     todoItemNode.appendChild(closeSpanNode);
+    removeTodoItem(closeSpanNode, todoItemNode, item);
+}
 
+function removeTodoItem(closeSpanNode, todoItemNode, item){
     closeSpanNode.onclick = function (event) {
         event.stopPropagation();
         if (confirm("Are you sure that you want to delete " + item.description + "?")) {
@@ -68,26 +82,26 @@ function addTodoItemToDisplay(item, index) {
             todoItemNode.remove();
         }
     }
+}
 
+function flipStatusIcon(item, itemNode, index){
     let tickElement = document.getElementById("tick" + index);
-    todoItemNode.onclick = function () {
+    itemNode.onclick = function () {
         if (item["status"] === "NEW") {
             item["status"] = "DONE"
-            todoItemNode.classList.toggle("checked");
+            itemNode.classList.toggle("checked");
             tickElement.textContent = "\u2713";
         } else {
             item["status"] = "NEW"
-            todoItemNode.classList.toggle("checked");
+            itemNode.classList.toggle("checked");
             tickElement.textContent = "🗸";
         }
         updateTodoItem(item["id"], item);
     }
-
     if (item.status === "DONE") {
-        todoItemNode.classList.toggle("checked");
+        itemNode.classList.toggle("checked");
         tickElement.textContent = "\u2713";
     }
-
 }
 
 function updateTodoItem(todoItemId, item) {
