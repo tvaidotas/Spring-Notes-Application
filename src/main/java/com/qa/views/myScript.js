@@ -1,6 +1,7 @@
 let root = 'http://localhost:9000';
-let NEW = "NEW"
-let DONE = "DONE"
+let NEW = "NEW";
+let DONE = "DONE";
+let EMPTYBOX = "🗸";
 
 function addNewTodoItem() {
     let todoValue = document.getElementById("newTodoDescription").value.trim();
@@ -60,7 +61,7 @@ function createListItems(todoItemNode, item, index){
 
 function addTickboxOption(todoItemNode, index){
     let tickSpanNode = document.createElement("SPAN");
-    let tickText = document.createTextNode("🗸");
+    let tickText = document.createTextNode(EMPTYBOX);
     tickSpanNode.classList.toggle("tickVisible");
     tickSpanNode.appendChild(tickText);
     tickSpanNode.id = "tick" + index;
@@ -96,7 +97,7 @@ function flipStatusIcon(item, itemNode, index){
         } else {
             item["status"] = NEW
             itemNode.classList.toggle("checked");
-            tickElement.textContent = "🗸";
+            tickElement.textContent = EMPTYBOX;
         }
         updateTodoItem(item["id"], item);
     }
@@ -167,35 +168,35 @@ function searchTodayTodos() {
 
 function sortCompletedItems() {
     let element = document.getElementById("completedDropdown");
-    if (element.textContent === "🗸") {
+    if (element.textContent === EMPTYBOX) {
         element.textContent = "\u2713";
         clearTodos();
         getTodosByStatus(DONE);
     } else {
-        element.textContent = "🗸";
+        element.textContent = EMPTYBOX;
         readTodoItems();
     }
 }
 
 function sortTodoItems() {
     let element = document.getElementById("todoDropdown");
-    if (element.textContent === "🗸") {
+    if (element.textContent === EMPTYBOX) {
         element.textContent = "\u2713";
         clearTodos();
         getTodosByStatus(NEW);
     } else {
-        element.textContent = "🗸";
+        element.textContent = EMPTYBOX;
         readTodoItems();
     }
 }
 
 function sortTodayItems() {
     let element = document.getElementById("todayDropdown");
-    if (element.textContent === "🗸") {
+    if (element.textContent === EMPTYBOX) {
         element.textContent = "\u2713";
         searchTodayTodos();
     } else {
-        element.textContent = "🗸";
+        element.textContent = EMPTYBOX;
         readTodoItems();
     }
 }
