@@ -233,7 +233,7 @@
             updateTodoItem(item["id"], item);
         }
 
-        if (item.status === "DONE"){
+        if (item.status === "DONE") {
             todoItemNode.classList.toggle("checked");
             tickElement.textContent = "\u2713";
         }
@@ -299,9 +299,9 @@
             .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
     }
 
-    function sortCompletedItems(){
+    function sortCompletedItems() {
         let element = document.getElementById("completedDropdown");
-        if (element.textContent === "🗸"){
+        if (element.textContent === "🗸") {
             element.textContent = "\u2713";
             clearTodos();
             getTodosByStatus("DONE");
@@ -311,9 +311,9 @@
         }
     }
 
-    function sortTodoItems(){
+    function sortTodoItems() {
         let element = document.getElementById("todoDropdown");
-        if (element.textContent === "🗸"){
+        if (element.textContent === "🗸") {
             element.textContent = "\u2713";
             clearTodos();
             getTodosByStatus("NEW");
@@ -323,9 +323,9 @@
         }
     }
 
-    function sortTodayItems(){
+    function sortTodayItems() {
         let element = document.getElementById("todayDropdown");
-        if (element.textContent === "🗸"){
+        if (element.textContent === "🗸") {
             element.textContent = "\u2713";
             searchTodayTodos();
         } else {
@@ -334,7 +334,7 @@
         }
     }
 
-    function clearTodos(){
+    function clearTodos() {
         document.getElementById("todoList").remove();
         let unorderedList = document.createElement("ul");
         unorderedList.className = "";
@@ -344,7 +344,7 @@
         document.body.append(unorderedList);
     }
 
-    function getTodosByStatus(status){
+    function getTodosByStatus(status) {
         const requestOptions = {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
@@ -367,18 +367,17 @@
     <input id="newTodoDescription" placeholder="Title..." type="text" style="width: 97%;">
 </form>
 
-<!--<form action="javascript:searchTodos()" id="searchItemForm">-->
 <form action="" id="searchItemForm">
     <input class="button" id="newTodoSearch" onkeyup="searchTodos()" type="search" placeholder="Search"
            style="width: 50%; float: left"/>
     <div class="dropdown">
-        <a class="dropbtn" onmouseover="displayDropDowns()">Show advanced filters▼</a>
+        <a class="dropbtn">Show advanced filters▼</a>
         <div class="dropdown-content">
             <a onclick="sortCompletedItems()">
                 <span id="completedDropdown" style="float: left">🗸</span>
                 Completed
             </a>
-            <a onclick="sortTodoItems()">
+            <a id="todoDropdownListItem" onclick="sortTodoItems()">
                 <span id="todoDropdown" style="float: left">🗸</span>
                 Todo
             </a>
