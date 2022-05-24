@@ -6,7 +6,7 @@ import java.time.LocalDate;
 @Entity
 public class Note {
 
-    public Note(){
+    public Note() {
         this.creationDate = LocalDate.now();
     }
 

@@ -1,3 +1,20 @@
+# IDE generated files #
+######################
 .idea
 target
 *.iml
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local Config generated files #
+######################
+launch.json
+application-private.yml
