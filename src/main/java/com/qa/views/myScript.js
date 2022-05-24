@@ -137,7 +137,7 @@ function deleteTodoItem(todoItemId) {
 function searchTodos() {
     let todoValue = document.getElementById("newTodoSearch").value.trim();
     if (todoValue === "") {
-        location.reload();
+        readTodoItems();
     }
     clearTodos();
     const requestOptions = {
