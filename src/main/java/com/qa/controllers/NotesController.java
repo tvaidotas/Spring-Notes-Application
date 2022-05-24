@@ -64,6 +64,29 @@ public class NotesController {
         }
     }
 
+    // TODO - potential filtering to satisfy multiple filter options
+    @GetMapping("notes/searchByStatus/{status}/{today}")
+    public List<Note> searchForNotesByStatusAndDate(@PathVariable String status, @PathVariable Boolean today) {
+        List<Note> allNotes = listAllNotes();
+        return allNotes
+                .stream()
+                .filter(note -> {
+                    if (today) {
+                        return note.getCreationDate().equals(LocalDate.now());
+                    } else {
+                        return true;
+                    }
+                })
+                .filter(note -> {
+                    if (status.equals("BOTH")) {
+                        return Objects.equals(note.getStatus(), "NEW") || Objects.equals(note.getStatus(), "DONE");
+                    } else {
+                        return Objects.equals(note.getStatus(), status);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("notes/searchByStatus/{status}")
     public List<Note> searchForNotesByStatus(@PathVariable String status) {
         List<Note> notesFound = repository
@@ -79,7 +102,7 @@ public class NotesController {
     }
 
     @GetMapping("notes/searchByToday")
-    public List<Note> searchForNotesByStatus() {
+    public List<Note> searchForNotesByDate() {
         List<Note> notesFound = repository
                 .findAll()
                 .stream()
