@@ -2,6 +2,7 @@ let root = 'http://localhost:9000';
 let NEW = "NEW";
 let DONE = "DONE";
 let EMPTYBOX = "🗸";
+let TICKEDBOX = "\u2713";
 
 function addNewTodoItem() {
     let todoValue = document.getElementById("newTodoDescription").value.trim();
@@ -93,7 +94,7 @@ function flipStatusIcon(item, itemNode, index){
         if (item["status"] === NEW) {
             item["status"] = DONE
             itemNode.classList.toggle("checked");
-            tickElement.textContent = "\u2713";
+            tickElement.textContent = TICKEDBOX;
         } else {
             item["status"] = NEW
             itemNode.classList.toggle("checked");
@@ -103,7 +104,7 @@ function flipStatusIcon(item, itemNode, index){
     }
     if (item.status === DONE) {
         itemNode.classList.toggle("checked");
-        tickElement.textContent = "\u2713";
+        tickElement.textContent = TICKEDBOX;
     }
 }
 
@@ -169,7 +170,7 @@ function searchTodayTodos() {
 function sortCompletedItems() {
     let element = document.getElementById("completedDropdown");
     if (element.textContent === EMPTYBOX) {
-        element.textContent = "\u2713";
+        element.textContent = TICKEDBOX;
         clearTodos();
         getTodosByStatus(DONE);
     } else {
@@ -181,7 +182,7 @@ function sortCompletedItems() {
 function sortTodoItems() {
     let element = document.getElementById("todoDropdown");
     if (element.textContent === EMPTYBOX) {
-        element.textContent = "\u2713";
+        element.textContent = TICKEDBOX;
         clearTodos();
         getTodosByStatus(NEW);
     } else {
@@ -193,7 +194,7 @@ function sortTodoItems() {
 function sortTodayItems() {
     let element = document.getElementById("todayDropdown");
     if (element.textContent === EMPTYBOX) {
-        element.textContent = "\u2713";
+        element.textContent = TICKEDBOX;
         searchTodayTodos();
     } else {
         element.textContent = EMPTYBOX;
