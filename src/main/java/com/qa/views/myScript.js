@@ -1,5 +1,6 @@
 let root = 'http://localhost:9000';
 let NEW = "NEW"
+let DONE = "DONE"
 
 function addNewTodoItem() {
     let todoValue = document.getElementById("newTodoDescription").value.trim();
@@ -89,7 +90,7 @@ function flipStatusIcon(item, itemNode, index){
     let tickElement = document.getElementById("tick" + index);
     itemNode.onclick = function () {
         if (item["status"] === NEW) {
-            item["status"] = "DONE"
+            item["status"] = DONE
             itemNode.classList.toggle("checked");
             tickElement.textContent = "\u2713";
         } else {
@@ -99,7 +100,7 @@ function flipStatusIcon(item, itemNode, index){
         }
         updateTodoItem(item["id"], item);
     }
-    if (item.status === "DONE") {
+    if (item.status === DONE) {
         itemNode.classList.toggle("checked");
         tickElement.textContent = "\u2713";
     }
@@ -169,7 +170,7 @@ function sortCompletedItems() {
     if (element.textContent === "🗸") {
         element.textContent = "\u2713";
         clearTodos();
-        getTodosByStatus("DONE");
+        getTodosByStatus(DONE);
     } else {
         element.textContent = "🗸";
         readTodoItems();
