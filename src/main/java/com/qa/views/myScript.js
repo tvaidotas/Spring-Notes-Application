@@ -206,9 +206,6 @@ function sortTodayItems() {
 function clearTodos() {
     document.getElementById("todoList").remove();
     let unorderedList = document.createElement("ul");
-    unorderedList.className = "";
-    unorderedList.style.paddingTop = "25px";
-    unorderedList.style.paddingLeft = "0px";
     unorderedList.id = "todoList";
     document.body.append(unorderedList);
 }

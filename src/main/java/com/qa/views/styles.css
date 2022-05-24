@@ -49,6 +49,8 @@ html {
     text-align: center;
     margin-left: 25%;
     margin-right: 25%;
+    padding-top: 25px;
+    padding-left: 0;
 }
 
 /* Each li element with the ul will hold a todo_item */
