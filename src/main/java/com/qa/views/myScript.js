@@ -1,4 +1,5 @@
 let root = 'http://localhost:9000';
+let NEW = "NEW"
 
 function addNewTodoItem() {
     let todoValue = document.getElementById("newTodoDescription").value.trim();
@@ -12,7 +13,7 @@ function addNewTodoItem() {
 function createTodoItem(todoItemDescription) {
     const newItem = {
         "description": todoItemDescription,
-        "status": "NEW"
+        "status": NEW
     };
     const requestOptions = {
         method: 'POST',
@@ -87,12 +88,12 @@ function removeTodoItem(closeSpanNode, todoItemNode, item){
 function flipStatusIcon(item, itemNode, index){
     let tickElement = document.getElementById("tick" + index);
     itemNode.onclick = function () {
-        if (item["status"] === "NEW") {
+        if (item["status"] === NEW) {
             item["status"] = "DONE"
             itemNode.classList.toggle("checked");
             tickElement.textContent = "\u2713";
         } else {
-            item["status"] = "NEW"
+            item["status"] = NEW
             itemNode.classList.toggle("checked");
             tickElement.textContent = "🗸";
         }
@@ -180,7 +181,7 @@ function sortTodoItems() {
     if (element.textContent === "🗸") {
         element.textContent = "\u2713";
         clearTodos();
-        getTodosByStatus("NEW");
+        getTodosByStatus(NEW);
     } else {
         element.textContent = "🗸";
         readTodoItems();
