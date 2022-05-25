@@ -8,38 +8,20 @@
 </head>
 <body onload="readTodoItems()">
     <div id="mainContainer">
-        <h1 class="defaultVerticalSpacing">Todo application</h1>
+        <h1 class="defaultVerticalSpacing centre">Things To Do!</h1>
+        <h3 class="centre"> &#62;----------------&#60;&#62;-----------------&#60; </h1>
 
         <form action="javascript:addNewTodoItem()" id="addItemForm" class="defaultVerticalSpacing">
-            <input class="flex" id="newTodoDescription" placeholder="Title..." type="text">
+            <input class="flex" id="newItemDescription" placeholder="Title..." type="text">
             <input type="submit" value="Add Task">
         </form>
         
         <form action="" id="searchItemForm" class="defaultVerticalSpacing">
-            <input id="newTodoSearch" onkeyup="searchTodos()" type="search" placeholder="Search"/>
-            <!-- TODO uncomment if needed -->
-            <!-- <div class="dropdown">
-                <a class="dropbtn">Show advanced filters▼</a>
-                <div class="dropdown-content">
-                    <a onclick="sortCompletedItems()">
-                        <span id="completedDropdown" style="float: left">🗸</span>
-                        Completed
-                    </a>
-                    <a id="todoDropdownListItem" onclick="sortTodoItems()">
-                        <span id="todoDropdown" style="float: left">🗸</span>
-                        Todo
-                    </a>
-                    <a onclick="sortTodayItems()">
-                        <span id="todayDropdown" style="float: left">🗸</span>
-                        Today
-                    </a>
-                </div>
-            </div> -->
+            <input id="todoSearch" onkeyup="searchTodos()" type="search" placeholder="Search"/>
         </form>
         
         <ul id="todoList" class="defaultVerticalSpacing">
         </ul>
-
     </div>
 </body>
 </html>

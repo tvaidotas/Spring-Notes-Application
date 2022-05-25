@@ -5,18 +5,18 @@ let EMPTYBOX = "🗸";
 let TICKEDBOX = "\u2713";
 
 function addNewTodoItem() {
-    let todoValue = document.getElementById("newTodoDescription").value.trim();
+    let todoValue = document.getElementById("newItemDescription").value.trim();
     if (todoValue === "") {
         alert("Please enter a value for your item");
     } else {
         createTodoItem(todoValue);
-        document.getElementById("newTodoDescription").value = "";
+        document.getElementById("newItemDescription").value = "";
     }
 }
 
-function createTodoItem(todoItemDescription) {
+function createTodoItem(listItemDescription) {
     const newItem = {
-        "description": todoItemDescription,
+        "description": listItemDescription,
         "status": NEW
     };
     const requestOptions = {
@@ -48,23 +48,33 @@ function readTodoItems() {
 
 function addTodoItemToDisplay(item, index) {
     let todoItemNode = document.createElement("li");
-    createListItems(todoItemNode, item, index);
+    createListItems(todoItemNode, index);
     addTickboxOption(todoItemNode, index);
+    addDescription(todoItemNode, item, index);
     addRemoveOption(todoItemNode, item);
     flipStatusIcon(item, todoItemNode, index);
 }
 
-function createListItems(todoItemNode, item, index){
-    let descriptionTextNode = document.createTextNode(item["description"]);
-    todoItemNode.id = "tickListItem:" + index;
-    todoItemNode.appendChild(descriptionTextNode);
+
+
+function createListItems(todoItemNode, index){
+    todoItemNode.id = "listItem:" + index;
     document.getElementById("todoList").appendChild(todoItemNode);
+}
+
+function addDescription(todoItemNode, item, index){
+    let descriptionSpanNode = document.createElement("SPAN");
+    let descriptionTextNode = document.createTextNode(item["description"]);
+    descriptionSpanNode.className = "listItemDescription";
+    descriptionSpanNode.appendChild(descriptionTextNode);
+    descriptionSpanNode.id = "listItemDescription" + index;
+    todoItemNode.appendChild(descriptionSpanNode);
 }
 
 function addTickboxOption(todoItemNode, index){
     let tickSpanNode = document.createElement("SPAN");
     let tickText = document.createTextNode(EMPTYBOX);
-    tickSpanNode.classList.toggle("tickVisible");
+    tickSpanNode.className = "tickIconStyle";
     tickSpanNode.appendChild(tickText);
     tickSpanNode.id = "tick" + index;
     todoItemNode.appendChild(tickSpanNode);
@@ -73,7 +83,7 @@ function addTickboxOption(todoItemNode, index){
 function addRemoveOption(todoItemNode, item){
     let closeSpanNode = document.createElement("SPAN");
     let closeText = document.createTextNode("X");
-    closeSpanNode.className = "close";
+    closeSpanNode.className = "closeIconStyle";
     closeSpanNode.appendChild(closeText);
     todoItemNode.appendChild(closeSpanNode);
     removeTodoItem(closeSpanNode, todoItemNode, item);
@@ -138,7 +148,7 @@ function deleteTodoItem(todoItemId) {
 }
 
 function searchTodos() {
-    let todoValue = document.getElementById("newTodoSearch").value.trim();
+    let todoValue = document.getElementById("todoSearch").value.trim();
     if (todoValue === "") {
         readTodoItems();
     }
@@ -154,65 +164,6 @@ function searchTodos() {
             } else return response.json();
         })
         .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
-}
-
-function searchTodayTodos() {
-    clearTodos();
-    const requestOptions = {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'}
-    };
-    fetch(root + '/notes/searchByToday', requestOptions)
-        .then((response) => {
-            if (!response.ok) {
-                location.reload();
-            } else return response.json();
-        })
-        .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
-}
-
-function sortCompletedItems() {
-    let element = document.getElementById("completedDropdown");
-    if (element.textContent === EMPTYBOX) {
-        element.textContent = TICKEDBOX;
-        clearTodos();
-        getTodosByStatus(DONE);
-    } else {
-        element.textContent = EMPTYBOX;
-        readTodoItems();
-    }
-}
-
-function sortTodoItems() {
-    let element = document.getElementById("todoDropdown");
-    if (element.textContent === EMPTYBOX) {
-        element.textContent = TICKEDBOX;
-        clearTodos();
-        getTodosByStatus(NEW);
-    } else {
-        element.textContent = EMPTYBOX;
-        readTodoItems();
-    }
-}
-
-function sortTodayItems() {
-    let element = document.getElementById("todayDropdown");
-    if (element.textContent === EMPTYBOX) {
-        element.textContent = TICKEDBOX;
-        searchTodayTodos();
-    } else {
-        element.textContent = EMPTYBOX;
-        readTodoItems();
-    }
-}
-
-function clearTodos2() {
-    let mainContainerElement = document.getElementById("mainContainer");
-
-    document.getElementById("todoList").remove();
-    let unorderedList = document.createElement("ul");
-    unorderedList.id = "todoList";
-    mainContainerElement.append(unorderedList);
 }
 
 function clearTodos() {
