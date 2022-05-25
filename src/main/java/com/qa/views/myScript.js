@@ -3,13 +3,60 @@ let NEW = "NEW";
 let DONE = "DONE";
 let EMPTYBOX = "🗸";
 let TICKEDBOX = "\u2713";
+let CHECKED = "checked";
+let STATUS = "status";
+let listOfNotes = [];
+
+function readTodoItems() {
+    clearTodos();
+    fetch(root + '/notes')
+        .then((response) => {
+            if (!response.ok) {
+                alert("An error has occurred.  Unable to read the TODO list")
+                throw response.status;
+            } else return response.json();
+        })
+        .then(displayFetchedItems());
+}
+
+function searchTodos() {
+    let newTodoItem = document.getElementById("todoSearch").value.trim();
+    if (newTodoItem === "") {
+        readTodoItems();
+    }
+    clearTodos();
+    const requestOptions = {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'}
+    };
+    fetch(root + '/notes/searchByKey/' + newTodoItem, requestOptions)
+        .then((response) => {
+            if (!response.ok) {
+                location.reload();
+            } else return response.json();
+        })
+        .then(displayFetchedItems());
+}
+
+function displayFetchedItems() {
+    return items => {
+        listOfNotes = items;
+        items.forEach((item, index) => renderTodoItem(item, index));
+    };
+}
+
+function clearTodos() {
+    let todoListElement = document.getElementById("todoList");
+    todoListElement.innerHTML = "";
+}
 
 function addNewTodoItem() {
-    let todoValue = document.getElementById("newItemDescription").value.trim();
-    if (todoValue === "") {
+    let newTodoItem = document.getElementById("newItemDescription").value.trim();
+    if (newTodoItem === "") {
         alert("Please enter a value for your item");
     } else {
-        createTodoItem(todoValue);
+        createTodoItem(newTodoItem);
+        // Reset newTodoItem field
         document.getElementById("newItemDescription").value = "";
     }
 }
@@ -27,39 +74,53 @@ function createTodoItem(listItemDescription) {
     fetch(root +'/notes', requestOptions)
         .then((response) => {
             if (!response.ok) {
-                alert("An error has occurred.  Unable to create the TODO item")
+                alert("An error has occurred. Unable to create the TODO item")
                 throw response.status;
             } else return response.json();
         })
-        .then(item => addTodoItemToDisplay(item));
+        .then(item => {
+            let index = listOfNotes.length;
+            renderTodoItem(item, index);
+            listOfNotes.push(item);
+        });
 }
 
-function readTodoItems() {
-    clearTodos();
-    fetch(root + '/notes')
-        .then((response) => {
-            if (!response.ok) {
-                alert("An error has occurred.  Unable to read the TODO list")
-                throw response.status;
-            } else return response.json();
-        })
-        .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
-}
-
-function addTodoItemToDisplay(item, index) {
+function renderTodoItem(item, index) {
     let todoItemNode = document.createElement("li");
-    createListItems(todoItemNode, index);
-    addTickboxOption(todoItemNode, index);
+    
+    addTickboxOption(todoItemNode, item, index);
     addDescription(todoItemNode, item, index);
     addRemoveOption(todoItemNode, item);
-    flipStatusIcon(item, todoItemNode, index);
+    addTodoItemNodeToTodoList(todoItemNode, index);
 }
 
+function addTickboxOption(todoItemNode, item, index){
+    let tickSpanNode = document.createElement("SPAN");
+    var tickText = document.createTextNode(EMPTYBOX);
+    if (item.status === DONE) {
+        todoItemNode.classList.toggle(CHECKED);
+        tickText = document.createTextNode(TICKEDBOX);
+    }
+    tickSpanNode.className = "tickIconStyle";
+    tickSpanNode.appendChild(tickText);
+    tickSpanNode.id = "tick" + index;
+    todoItemNode.onclick = function () {
+        onTodoItemClicked(todoItemNode, tickSpanNode, item);
+    }
+    todoItemNode.appendChild(tickSpanNode);
+}
 
-
-function createListItems(todoItemNode, index){
-    todoItemNode.id = "listItem:" + index;
-    document.getElementById("todoList").appendChild(todoItemNode);
+function onTodoItemClicked(todoItemNode, tickSpanNode, item) {
+    if (item[STATUS] === NEW) {
+        item[STATUS] = DONE;
+        todoItemNode.classList.toggle(CHECKED);
+        tickSpanNode.textContent = TICKEDBOX;
+    } else {
+        item[STATUS] = NEW;
+        todoItemNode.classList.toggle(CHECKED);
+        tickSpanNode.textContent = EMPTYBOX;
+    }
+    updateTodoItem(item["id"], item);
 }
 
 function addDescription(todoItemNode, item, index){
@@ -71,55 +132,21 @@ function addDescription(todoItemNode, item, index){
     todoItemNode.appendChild(descriptionSpanNode);
 }
 
-function addTickboxOption(todoItemNode, index){
-    let tickSpanNode = document.createElement("SPAN");
-    let tickText = document.createTextNode(EMPTYBOX);
-    tickSpanNode.className = "tickIconStyle";
-    tickSpanNode.appendChild(tickText);
-    tickSpanNode.id = "tick" + index;
-    todoItemNode.appendChild(tickSpanNode);
-}
-
 function addRemoveOption(todoItemNode, item){
     let closeSpanNode = document.createElement("SPAN");
     let closeText = document.createTextNode("X");
     closeSpanNode.className = "closeIconStyle";
     closeSpanNode.appendChild(closeText);
     todoItemNode.appendChild(closeSpanNode);
-    removeTodoItem(closeSpanNode, todoItemNode, item);
-}
-
-function removeTodoItem(closeSpanNode, todoItemNode, item){
+    
     closeSpanNode.onclick = function (event) {
-        event.stopPropagation();
-        if (confirm("Are you sure that you want to delete " + item.description + "?")) {
-            deleteTodoItem(item["id"]);
-            todoItemNode.remove();
-        }
+        onRemoveItemClicked(event, todoItemNode, item);
     }
 }
 
-function flipStatusIcon(item, itemNode, index){
-    let CHECKED = "checked";
-    let STATUS = "status";
-    let tickElement = document.getElementById("tick" + index);
-    itemNode.onclick = function () {
-        console.log(item);
-        if (item[STATUS] === NEW) {
-            item[STATUS] = DONE
-            itemNode.classList.toggle(CHECKED);
-            tickElement.textContent = TICKEDBOX;
-        } else {
-            item[STATUS] = NEW
-            itemNode.classList.toggle(CHECKED);
-            tickElement.textContent = EMPTYBOX;
-        }
-        updateTodoItem(item["id"], item);
-    }
-    if (item.status === DONE) {
-        itemNode.classList.toggle(CHECKED);
-        tickElement.textContent = TICKEDBOX;
-    }
+function addTodoItemNodeToTodoList(todoItemNode, index){
+    todoItemNode.id = "listItem:" + index;
+    document.getElementById("todoList").appendChild(todoItemNode);
 }
 
 function updateTodoItem(todoItemId, item) {
@@ -137,6 +164,15 @@ function updateTodoItem(todoItemId, item) {
         })
 }
 
+function onRemoveItemClicked(event, todoItemNode, item){
+    // stopPropagation() prevents events from bubbling up to parent elements
+    event.stopPropagation();
+    if (confirm("Are you sure that you want to delete " + item.description + "?")) {
+        deleteTodoItem(item["id"]);
+        todoItemNode.remove();
+    }
+}
+
 function deleteTodoItem(todoItemId) {
     fetch(root + '/notes/' + todoItemId, {method: 'DELETE'})
         .then((response) => {
@@ -145,42 +181,4 @@ function deleteTodoItem(todoItemId) {
                 throw response.status;
             } else return response.json();
         })
-}
-
-function searchTodos() {
-    let todoValue = document.getElementById("todoSearch").value.trim();
-    if (todoValue === "") {
-        readTodoItems();
-    }
-    clearTodos();
-    const requestOptions = {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'}
-    };
-    fetch(root + '/notes/searchByKey/' + todoValue, requestOptions)
-        .then((response) => {
-            if (!response.ok) {
-                location.reload();
-            } else return response.json();
-        })
-        .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
-}
-
-function clearTodos() {
-    let todoListElement = document.getElementById("todoList");
-    todoListElement.innerHTML = "";
-}
-
-function getTodosByStatus(status) {
-    const requestOptions = {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'}
-    };
-    fetch(root + '/notes/searchByStatus/' + status, requestOptions)
-        .then((response) => {
-            if (!response.ok) {
-                location.reload();
-            } else return response.json();
-        })
-        .then(items => items.map((item, index) => addTodoItemToDisplay(item, index)));
 }
