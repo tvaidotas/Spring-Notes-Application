@@ -8,9 +8,10 @@ function addNewTodoItem() {
     let todoValue = document.getElementById("newTodoDescription").value.trim();
     if (todoValue === "") {
         alert("Please enter a value for your item");
+    } else {
+        createTodoItem(todoValue);
+        document.getElementById("newTodoDescription").value = "";
     }
-    createTodoItem(todoValue);
-    document.getElementById("newTodoDescription").value = "";
 }
 
 function createTodoItem(todoItemDescription) {
@@ -90,8 +91,10 @@ function removeTodoItem(closeSpanNode, todoItemNode, item){
 
 function flipStatusIcon(item, itemNode, index){
     let CHECKED = "checked";
+    let STATUS = "status";
     let tickElement = document.getElementById("tick" + index);
     itemNode.onclick = function () {
+        console.log(item);
         if (item[STATUS] === NEW) {
             item[STATUS] = DONE
             itemNode.classList.toggle(CHECKED);
@@ -203,11 +206,18 @@ function sortTodayItems() {
     }
 }
 
-function clearTodos() {
+function clearTodos2() {
+    let mainContainerElement = document.getElementById("mainContainer");
+
     document.getElementById("todoList").remove();
     let unorderedList = document.createElement("ul");
     unorderedList.id = "todoList";
-    document.body.append(unorderedList);
+    mainContainerElement.append(unorderedList);
+}
+
+function clearTodos() {
+    let todoListElement = document.getElementById("todoList");
+    todoListElement.innerHTML = "";
 }
 
 function getTodosByStatus(status) {
