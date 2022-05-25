@@ -1,14 +1,12 @@
 package com.qa.models;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Note {
-
-    public Note() {
-        this.creationDate = LocalDate.now();
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,8 +15,6 @@ public class Note {
     private String description;
 
     private String status;
-
-    private LocalDate creationDate;
 
     public Long getId() {
         return id;
@@ -42,14 +38,6 @@ public class Note {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
     }
 
 }

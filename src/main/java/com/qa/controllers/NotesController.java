@@ -4,10 +4,8 @@ import com.qa.models.Note;
 import com.qa.repository.NotesRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,14 +28,9 @@ public class NotesController {
         return repository.saveAndFlush(note);
     }
 
-    @GetMapping("notes/{id}")
-    public Note getNote(@PathVariable Long id) throws Exception {
-        return repository.findById(id).orElseThrow(() -> new Exception("Could not find Note"));
-    }
-
     @PutMapping("notes/{id}")
     public Note updateNote(@PathVariable Long id, @RequestBody Note note) throws Exception {
-        Note update = getNote(id);
+        Note update = repository.findById(id).orElseThrow(() -> new Exception("Could not find Note"));
         update.setStatus(note.getStatus());
         update.setDescription(note.getDescription());
         return repository.save(update);
@@ -56,57 +49,6 @@ public class NotesController {
                 .findAll()
                 .stream()
                 .filter(note -> note.getDescription().toLowerCase().contains(key.toLowerCase()))
-                .collect(Collectors.toList());
-        if (notesFound.isEmpty()) {
-            return Collections.emptyList();
-        } else {
-            return notesFound;
-        }
-    }
-
-    // TODO - potential filtering to satisfy multiple filter options
-    @GetMapping("notes/searchByStatus/{status}/{today}")
-    public List<Note> searchForNotesByStatusAndDate(@PathVariable String status, @PathVariable Boolean today) {
-        List<Note> allNotes = listAllNotes();
-        return allNotes
-                .stream()
-                .filter(note -> {
-                    if (today) {
-                        return note.getCreationDate().equals(LocalDate.now());
-                    } else {
-                        return true;
-                    }
-                })
-                .filter(note -> {
-                    if (status.equals("BOTH")) {
-                        return Objects.equals(note.getStatus(), "NEW") || Objects.equals(note.getStatus(), "DONE");
-                    } else {
-                        return Objects.equals(note.getStatus(), status);
-                    }
-                })
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("notes/searchByStatus/{status}")
-    public List<Note> searchForNotesByStatus(@PathVariable String status) {
-        List<Note> notesFound = repository
-                .findAll()
-                .stream()
-                .filter(note -> Objects.equals(note.getStatus(), status))
-                .collect(Collectors.toList());
-        if (notesFound.isEmpty()) {
-            return Collections.emptyList();
-        } else {
-            return notesFound;
-        }
-    }
-
-    @GetMapping("notes/searchByToday")
-    public List<Note> searchForNotesByDate() {
-        List<Note> notesFound = repository
-                .findAll()
-                .stream()
-                .filter(note -> note.getCreationDate().equals(LocalDate.now()))
                 .collect(Collectors.toList());
         if (notesFound.isEmpty()) {
             return Collections.emptyList();
