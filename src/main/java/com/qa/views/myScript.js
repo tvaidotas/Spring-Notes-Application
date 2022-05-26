@@ -8,7 +8,6 @@ let STATUS = "status";
 let listOfNotes = [];
 
 function readTodoItems() {
-    clearTodos();
     fetch(root + '/notes')
         .then((response) => {
             if (!response.ok) {
@@ -24,7 +23,6 @@ function searchTodos() {
     if (newTodoItem === "") {
         readTodoItems();
     } else {
-        clearTodos();
         const requestOptions = {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
@@ -41,15 +39,17 @@ function searchTodos() {
 }
 
 function displayFetchedItems() {
+    clearRenderedTodoItems();
     return items => {
         listOfNotes = items;
         items.forEach((item, index) => renderTodoItem(item, index));
     };
 }
 
-function clearTodos() {
+function clearRenderedTodoItems() {
     let todoListElement = document.getElementById("todoList");
     todoListElement.innerHTML = "";
+    listOfNotes = [];
 }
 
 function addNewTodoItem() {
