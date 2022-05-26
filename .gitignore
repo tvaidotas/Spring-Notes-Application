@@ -18,3 +18,11 @@ Thumbs.db
 ######################
 launch.json
 application-private.yml
+
+# Node generated files #
+######################
+node_modules
+build
+npm-debug.log
+.env
+.DS_Store

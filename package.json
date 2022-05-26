@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "test": "node src/test/integration/test_todo.js"
+  },
+  "dependencies": {
+    "selenium-webdriver": "3.6.0"
+  }
+}
