@@ -23,19 +23,21 @@ function searchTodos() {
     let newTodoItem = document.getElementById("todoSearch").value.trim();
     if (newTodoItem === "") {
         readTodoItems();
+    } else {
+        clearTodos();
+        const requestOptions = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        };
+        fetch(root + '/notes/searchByKey/' + newTodoItem, requestOptions)
+            .then((response) => {
+                if (!response.ok) {
+                    location.reload();
+                } else return response.json();
+            })
+            .then(displayFetchedItems());
     }
-    clearTodos();
-    const requestOptions = {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'}
-    };
-    fetch(root + '/notes/searchByKey/' + newTodoItem, requestOptions)
-        .then((response) => {
-            if (!response.ok) {
-                location.reload();
-            } else return response.json();
-        })
-        .then(displayFetchedItems());
+    
 }
 
 function displayFetchedItems() {
