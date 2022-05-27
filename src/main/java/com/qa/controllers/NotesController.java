@@ -45,6 +45,9 @@ public class NotesController {
 
     @GetMapping("notes/searchByKey/{key}")
     public List<Note> searchForNotesByKey(@PathVariable String key) {
+
+        //TODO write repo method with query filtering the notes.
+
         List<Note> notesFound = repository
                 .findAll()
                 .stream()
