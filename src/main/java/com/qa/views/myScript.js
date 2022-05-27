@@ -18,7 +18,9 @@ function readTodoItems() {
         .then(displayFetchedItems());
 }
 
-function searchTodos() {
+const searchTodos = debounce(() => searchTodos2());
+
+function searchTodos2() {
     let newTodoItem = document.getElementById("todoSearch").value.trim();
     if (newTodoItem === "") {
         readTodoItems();
@@ -37,6 +39,14 @@ function searchTodos() {
     }
     
 }
+
+function debounce(func, timeout = 300){
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }
 
 function displayFetchedItems() {
     clearRenderedTodoItems();
@@ -92,7 +102,7 @@ function renderTodoItem(item, index) {
     
     addTickboxOption(todoItemNode, item, index);
     addDescription(todoItemNode, item, index);
-    addRemoveOption(todoItemNode, item);
+    addRemoveOption(todoItemNode, item, index);
     addTodoItemNodeToTodoList(todoItemNode, index);
 }
 
@@ -134,11 +144,12 @@ function addDescription(todoItemNode, item, index){
     todoItemNode.appendChild(descriptionSpanNode);
 }
 
-function addRemoveOption(todoItemNode, item){
+function addRemoveOption(todoItemNode, item, index){
     let closeSpanNode = document.createElement("SPAN");
     let closeText = document.createTextNode("X");
     closeSpanNode.className = "closeIconStyle";
     closeSpanNode.appendChild(closeText);
+    closeSpanNode.id = "closeIcon" + index;
     todoItemNode.appendChild(closeSpanNode);
     
     closeSpanNode.onclick = function (event) {
