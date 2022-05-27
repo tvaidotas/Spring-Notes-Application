@@ -18,3 +18,5 @@ mvn clean package
 ```
 4. Copy the .war file from the /target directory to tomcats webapps directory
 5. Check whether the application was deployed successfully
+
+## Testing instructions
