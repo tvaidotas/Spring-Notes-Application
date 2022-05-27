@@ -30,9 +30,8 @@ public class TodoTemplateTest
     @BeforeAll
     public static void init(){
         driver = new ChromeDriver();
-        driver.get("http://127.0.0.1:5500/src/main/java/com/qa/views/todoFresh.html");
+        driver.get("http://localhost:4200");
     }
-   
 
     @Test
     @Order(1)    
@@ -42,11 +41,13 @@ public class TodoTemplateTest
 
         driver.findElement(By.id("newItemDescription")).sendKeys(expectedItemName);
         driver.findElement(By.id("addNewItemButton")).click();
+
+        new WebDriverWait(driver, Duration.ofSeconds(1))
+        .until(driver -> driver.findElements(By.id("listItemDescription0")).size() == 1);
+
         String itemName = driver.findElement(By.id("listItemDescription0")).getText();
         assertEquals(expectedItemName, itemName);
     }
-
-
 
     @Test
     @Order(2)    
@@ -91,8 +92,6 @@ public class TodoTemplateTest
         List<WebElement> listOfItems = driver.findElements(By.xpath("//li"));
         assertEquals(1, listOfItems.size());
     }
-
-   
 
     @AfterAll
     public static void teardown() {
