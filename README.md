@@ -20,3 +20,10 @@ mvn clean package
 5. Check whether the application was deployed successfully
 
 ## Testing instructions
+1. Install browser drivers to use Selenium. Please follow https://www.selenium.dev/documentation/webdriver/getting_started/install_drivers/ 
+2. Open a terminal within the repository directory
+3. Execute the following command
+```shell
+mvn test
+```
+5. Check whether the tests were successfull
