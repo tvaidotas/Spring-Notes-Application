@@ -30,7 +30,7 @@ public class TodoTemplateTest
     @BeforeAll
     public static void init(){
         driver = new ChromeDriver();
-        driver.get("http://localhost:4200");
+        driver.get("http://localhost:9000/todoFresh.html");
     }
 
     @Test
