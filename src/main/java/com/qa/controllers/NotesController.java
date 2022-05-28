@@ -46,5 +46,5 @@ public class NotesController {
     public List<Note> searchForNotesByKey(@PathVariable String key) {
         return repository.searchForNotes(key).stream().collect(Collectors.toList());
     }
-
 }
+ 

@@ -1,26 +1,5 @@
 package com.qa.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.qa.controllers.NotesController;
-import com.qa.models.Note;
-import com.qa.repository.NotesRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,18 +7,32 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qa.controllers.NotesController;
+import com.qa.models.Note;
+import com.qa.repository.NotesRepository;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(NotesController.class)
@@ -171,11 +164,30 @@ public class NotesControllerTest {
 
     @Test
     public void searchForNotesByKey() throws Exception {
-        //TODO implement test
+        String searchKeyword = "foo";
+
+        List<Note> expectedNotesList = new ArrayList<>();
+        Note note = new Note();
+        note.setDescription("foo");
+        note.setStatus("NEW");
+        expectedNotesList.add(note);
+
+        when(repository.searchForNotes(any())).thenReturn(expectedNotesList);
+        
+		MvcResult result = this.mockMvc.perform(get("/notes/searchByKey/"+searchKeyword))
+        .andExpect(status().isOk())
+        .andReturn();
+
+        assertNotNull(result);
+        verify(repository, times(1)).searchForNotes(eq(searchKeyword));
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        List<Note> actual = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Note>>() {});
+
+        assertEquals(expectedNotesList.size(), actual.size());
+        
     }
-
-
-
 
     public static String asJsonString(final Object obj) {
         try {
