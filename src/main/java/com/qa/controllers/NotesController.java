@@ -4,7 +4,6 @@ import com.qa.models.Note;
 import com.qa.repository.NotesRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,19 +44,7 @@ public class NotesController {
 
     @GetMapping("notes/searchByKey/{key}")
     public List<Note> searchForNotesByKey(@PathVariable String key) {
-
-        //TODO write repo method with query filtering the notes.
-
-        List<Note> notesFound = repository
-                .findAll()
-                .stream()
-                .filter(note -> note.getDescription().toLowerCase().contains(key.toLowerCase()))
-                .collect(Collectors.toList());
-        if (notesFound.isEmpty()) {
-            return Collections.emptyList();
-        } else {
-            return notesFound;
-        }
+        return repository.searchForNotes(key).stream().collect(Collectors.toList());
     }
 
 }
