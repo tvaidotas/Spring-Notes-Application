@@ -2,38 +2,49 @@ package com.qa.controllers;
 
 import com.qa.models.Note;
 import com.qa.repository.NotesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin()
 public class NotesController {
 
-    @Autowired
-    private NotesRepository repository;
+    private final NotesRepository repository;
 
-    @RequestMapping(value = "notes", method = RequestMethod.GET)
-    public List<Note> listAllNotes(){
+    public NotesController(NotesRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("notes")
+    public List<Note> listAllNotes() {
         return repository.findAll();
     }
 
-    @RequestMapping(value = "notes", method = RequestMethod.POST)
-    public Note addNote(@RequestBody Note note){
+    @PostMapping("notes")
+    public Note addNote(@RequestBody Note note) {
         return repository.saveAndFlush(note);
     }
 
-    @RequestMapping(value = "notes/{id}", method = RequestMethod.GET)
-    public Note getNote(@PathVariable Long id){
-        return repository.findOne(id);
+    @PutMapping("notes/{id}")
+    public Note updateNote(@PathVariable Long id, @RequestBody Note note) throws Exception {
+        Note update = repository.findById(id).orElseThrow(() -> new Exception("Could not find Note"));
+        update.setStatus(note.getStatus());
+        update.setDescription(note.getDescription());
+        return repository.save(update);
     }
 
-    @RequestMapping(value = "notes/{id}", method = RequestMethod.DELETE)
-    public Note deleteNote(@PathVariable Long id){
-        Note existing = repository.findOne(id);
+    @DeleteMapping("notes/{id}")
+    public Note deleteNote(@PathVariable Long id) throws Exception {
+        Note existing = repository.findById(id).orElseThrow(() -> new Exception("Could not delete Note"));
         repository.delete(existing);
         return existing;
     }
 
+    @GetMapping("notes/searchByKey/{key}")
+    public List<Note> searchForNotesByKey(@PathVariable String key) {
+        return repository.searchForNotes(key).stream().collect(Collectors.toList());
+    }
 }
+ 
